@@ -15,7 +15,6 @@
         input:focus { outline: none; border-color: var(--accent); }
         button { width: 100%; padding: 10px; background: var(--accent); border: none; color: white; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: monospace; }
         button:hover { background: #2563eb; }
-        button:disabled { background: #27272a; color: #52525b; cursor: not-allowed; }
         .err { color: var(--err); font-size: 0.75rem; margin-top: 10px; text-align: center; height: 15px; }
         .trap { display: none; }
         .dash { display: none; text-align: center; }
@@ -57,18 +56,13 @@
             return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        // Exakter SHA-256 Hash für "RiftAdmin#2026"
         const _0x7c = "b4f8cb6441ef3117bca89d14ea20e36395e82eb00b12c75a4be1d957d07914de";
-        
-        let _0x3e=0, _0x5l=false;
 
         async function x0(){
-            if(_0x5l)return;
             if(document.getElementById('t').value!==""){document.getElementById('e').innerText="Protocol Violation";return;}
             const _0x91=document.getElementById('u').value;
             const _0x92=document.getElementById('p').value;
             const _0xee=document.getElementById('e');
-            const _0xbtn=document.getElementById('b');
 
             const hashedInput = await sha256(_0x92);
 
@@ -77,16 +71,7 @@
                 document.getElementById('fl').innerText="FLAG{c0de_obfusc4ti0n_m4st3r_9981}";
                 document.getElementById('d').style.display='block';
             }else{
-                _0x3e++;
-                if(_0x3e>=3){
-                    _0x5l=true;let _0xcd=30;_0xbtn.disabled=true;
-                    const _0xint=setInterval(()=>{
-                        _0xee.innerText=`Lockout active (${_0xcd}s)`;_0xcd--;
-                        if(_0xcd<0){clearInterval(_0xint);_0x5l=false;_0x3e=0;_0xbtn.disabled=false;_0xee.innerText="";}
-                    },1000);
-                }else{
-                    _0xee.innerText=`Auth failed. Attempts left: ${3-_0x3e}`;
-                }
+                _0xee.innerText = "Zugriff verweigert.";
             }
         }
     </script>
