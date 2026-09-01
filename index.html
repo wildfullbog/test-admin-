@@ -6,24 +6,26 @@
     <title>Kernel // Diagnostic Core v9.4</title>
     <style>
         :root { 
-            --bg: #050507; 
-            --panel: rgba(18, 18, 24, 0.75); 
-            --border: rgba(255, 255, 255, 0.08); 
+            --bg: #030305; 
+            --panel: rgba(12, 12, 18, 0.7); 
+            --border: rgba(255, 255, 255, 0.06); 
+            --border-hover: rgba(59, 130, 246, 0.4);
             --border-focus: #3b82f6; 
             --accent: #3b82f6; 
-            --accent-glow: rgba(59, 130, 246, 0.25);
-            --text: #f4f4f5; 
+            --accent-glow: rgba(59, 130, 246, 0.35);
+            --text: #ffffff; 
             --text-dim: #71717a;
             --err: #ef4444; 
             --succ: #22c55e; 
         }
 
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, monospace; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
             background: var(--bg); 
             background-image: 
-                radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.1), transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(15, 23, 42, 0.4), transparent 50%);
+                radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.18), transparent 60%),
+                radial-gradient(circle at 100% 100%, rgba(147, 51, 234, 0.08), transparent 50%),
+                radial-gradient(circle at 0% 100%, rgba(59, 130, 246, 0.08), transparent 50%);
             color: var(--text); 
             display: flex; 
             justify-content: center; 
@@ -35,33 +37,48 @@
 
         .box { 
             background: var(--panel); 
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border: 1px solid var(--border); 
-            padding: 40px 35px; 
-            border-radius: 12px; 
-            width: 360px; 
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); 
-            transition: all 0.3s ease;
+            padding: 45px 40px; 
+            border-radius: 16px; 
+            width: 380px; 
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.02) inset; 
+            animation: boxEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            position: relative;
+        }
+
+        @keyframes boxEnter {
+            from { opacity: 0; transform: translateY(20px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 20%; right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
         }
 
         h2 { 
             margin-top: 0; 
-            margin-bottom: 30px; 
-            font-size: 1rem; 
+            margin-bottom: 35px; 
+            font-size: 1.1rem; 
             text-transform: uppercase; 
-            letter-spacing: 3px; 
+            letter-spacing: 4px; 
             text-align: center; 
             color: var(--text);
-            font-weight: 600;
+            font-weight: 700;
         }
 
         h2 span {
             color: var(--accent);
+            text-shadow: 0 0 20px var(--accent-glow);
         }
 
         .group { 
-            margin-bottom: 20px; 
+            margin-bottom: 22px; 
             position: relative;
         }
 
@@ -71,52 +88,74 @@
             color: var(--text-dim); 
             margin-bottom: 8px; 
             text-transform: uppercase; 
-            letter-spacing: 1.5px; 
+            letter-spacing: 2px; 
             font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .group:focus-within label {
+            color: var(--accent);
         }
 
         input { 
             width: 100%; 
-            padding: 12px 14px; 
-            background: rgba(0, 0, 0, 0.3); 
+            padding: 14px 16px; 
+            background: rgba(0, 0, 0, 0.4); 
             border: 1px solid var(--border); 
             color: var(--text); 
             box-sizing: border-box; 
             font-family: inherit;
-            font-size: 0.9rem;
-            border-radius: 8px; 
-            transition: all 0.2s ease;
+            font-size: 0.95rem;
+            border-radius: 10px; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input:hover {
+            border-color: var(--border-hover);
         }
 
         input:focus { 
             outline: none; 
             border-color: var(--border-focus); 
-            background: rgba(0, 0, 0, 0.5);
-            box-shadow: 0 0 0 4px var(--accent-glow); 
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 0 4px var(--accent-glow), 0 0 20px rgba(59, 130, 246, 0.15); 
         }
 
         button { 
             width: 100%; 
-            padding: 12px; 
-            background: var(--accent); 
+            padding: 14px; 
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); 
             border: none; 
             color: white; 
             font-weight: 600; 
             cursor: pointer; 
             text-transform: uppercase; 
             font-family: inherit;
-            font-size: 0.8rem;
-            border-radius: 8px; 
-            letter-spacing: 1.5px; 
-            margin-top: 10px; 
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 14px var(--accent-glow);
+            font-size: 0.85rem;
+            border-radius: 10px; 
+            letter-spacing: 2px; 
+            margin-top: 12px; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px var(--accent-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        button:hover::after {
+            left: 100%;
         }
 
         button:hover { 
-            background: #2563eb; 
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.5); 
         }
 
         button:active {
@@ -130,6 +169,13 @@
             text-align: center; 
             height: 15px; 
             font-weight: 500;
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-4px); }
+            40%, 80% { transform: translateX(4px); }
         }
 
         .trap { display: none; }
@@ -137,24 +183,25 @@
         .dash { 
             display: none; 
             text-align: center; 
-            animation: fadeIn 0.5s ease forwards;
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         .flag { 
-            background: rgba(0, 0, 0, 0.4); 
+            background: rgba(0, 0, 0, 0.5); 
             border: 1px dashed rgba(59, 130, 246, 0.4); 
-            padding: 16px; 
-            margin-top: 20px; 
+            padding: 18px; 
+            margin-top: 25px; 
             word-break: break-all; 
             color: var(--accent); 
-            font-size: 0.85rem; 
-            border-radius: 8px; 
+            font-size: 0.9rem; 
+            border-radius: 10px; 
             font-family: monospace;
+            box-shadow: inset 0 0 15px rgba(59, 130, 246, 0.1);
         }
     </style>
 </head>
@@ -164,7 +211,7 @@
         <div id="f">
             <div class="group">
                 <label>User</label>
-                <input type="text" id="u" autocomplete="off" placeholder="Username eingeben...">
+                <input type="text" id="u" autocomplete="off" placeholder="root_admin">
             </div>
             <div class="group">
                 <label>Password</label>
@@ -178,8 +225,8 @@
             <div class="err" id="e"></div>
         </div>
         <div class="dash" id="d">
-            <h2 style="color: var(--succ); margin-bottom: 10px;">Access Granted</h2>
-            <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0;">Root-Sitzung erfolgreich initialisiert.</p>
+            <h2 style="color: var(--succ); margin-bottom: 12px; text-shadow: 0 0 20px rgba(34,197,94,0.4);">Access Granted</h2>
+            <p style="font-size: 0.85rem; color: var(--text-dim); margin-top: 0; letter-spacing: 0.5px;">Root-Sitzung erfolgreich initialisiert.</p>
             <div class="flag" id="fl"></div>
         </div>
     </div>
@@ -218,6 +265,8 @@
                 document.getElementById('fl').innerText = "FLAG{c0de_obfusc4ti0n_m4st3r_9981}";
                 document.getElementById('d').style.display = 'block';
             } else {
+                _0xee.innerText = "";
+                void _0xee.offsetWidth; // Trigger reflow to restart shake animation
                 _0xee.innerText = "Zugriff verweigert.";
             }
         }
