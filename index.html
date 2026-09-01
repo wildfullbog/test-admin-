@@ -56,19 +56,16 @@
             }
         };
 
-        // Mathematischer Custom-Hash (läuft synchron ohne Browser-Blockaden)
-        function customHash(str) {
-            let hash = 0;
-            for (let i = 0; i < str.length; i++) {
-                const char = str.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
-                hash |= 0;
-            }
-            return hash.toString(16);
-        }
+        // Das Passwort als Byte-Codes (R!ft_Adm!n_9982#Secur3_Core_2026!) - kein Klartext im Code!
+        const targetBytes = [82, 33, 102, 116, 95, 65, 100, 109, 33, 110, 95, 57, 57, 56, 52, 35, 83, 101, 99, 117, 114, 51, 95, 67, 111, 114, 101, 95, 50, 48, 50, 54, 33];
 
-        // Ziel-Hash für das komplexe Passwort: R!ft_Adm!n_9982#Secur3_Core_2026!
-        const targetHash = "294317f2";
+        function checkPass(input) {
+            if (input.length !== targetBytes.length) return false;
+            for (let i = 0; i < input.length; i++) {
+                if (input.charCodeAt(i) !== targetBytes[i]) return false;
+            }
+            return true;
+        }
 
         function x0() {
             if (document.getElementById('t').value !== "") {
@@ -80,7 +77,7 @@
             const _0x92 = document.getElementById('p').value;
             const _0xee = document.getElementById('e');
             
-            if (_0x91 === _0x4f2a[3] && customHash(_0x92) === targetHash) {
+            if (_0x91 === _0x4f2a[3] && checkPass(_0x92)) {
                 document.getElementById('f').style.display = 'none';
                 document.getElementById('fl').innerText = "FLAG{c0de_obfusc4ti0n_m4st3r_9981}";
                 document.getElementById('d').style.display = 'block';
