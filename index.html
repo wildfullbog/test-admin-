@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kernel // Diagnostic Core v9.4</title>
+    <title>Hacker Admin Panel</title>
     <style>
         :root { 
             --bg: #030305; 
-            --panel: rgba(12, 12, 18, 0.7); 
-            --border: rgba(255, 255, 255, 0.06); 
-            --border-hover: rgba(59, 130, 246, 0.4);
+            --panel: rgba(10, 10, 15, 0.75); 
+            --border: rgba(255, 255, 255, 0.08); 
+            --border-hover: rgba(59, 130, 246, 0.5);
             --border-focus: #3b82f6; 
             --accent: #3b82f6; 
-            --accent-glow: rgba(59, 130, 246, 0.35);
+            --accent-glow: rgba(59, 130, 246, 0.4);
             --text: #ffffff; 
             --text-dim: #71717a;
             --err: #ef4444; 
@@ -23,9 +23,12 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
             background: var(--bg); 
             background-image: 
-                radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.18), transparent 60%),
-                radial-gradient(circle at 100% 100%, rgba(147, 51, 234, 0.08), transparent 50%),
-                radial-gradient(circle at 0% 100%, rgba(59, 130, 246, 0.08), transparent 50%);
+                radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.25), transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(147, 51, 234, 0.12), transparent 50%),
+                radial-gradient(circle at 0% 100%, rgba(59, 130, 246, 0.12), transparent 50%),
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 30px 30px, 30px 30px;
             color: var(--text); 
             display: flex; 
             justify-content: center; 
@@ -37,48 +40,73 @@
 
         .box { 
             background: var(--panel); 
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
             border: 1px solid var(--border); 
-            padding: 45px 40px; 
-            border-radius: 16px; 
-            width: 380px; 
-            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.02) inset; 
-            animation: boxEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            padding: 50px 45px; 
+            border-radius: 20px; 
+            width: 400px; 
+            box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.03) inset; 
+            animation: boxEnter 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             position: relative;
         }
 
         @keyframes boxEnter {
-            from { opacity: 0; transform: translateY(20px) scale(0.97); }
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .box::before {
             content: '';
             position: absolute;
-            top: 0; left: 20%; right: 20%;
-            height: 1px;
+            top: 0; left: 15%; right: 15%;
+            height: 2px;
             background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            box-shadow: 0 0 15px var(--accent);
         }
 
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+        }
+
+        .dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .dot:nth-child(1) { background: #ef4444; }
+        .dot:nth-child(2) { background: #f59e0b; }
+        .dot:nth-child(3) { background: #22c55e; }
+
         h2 { 
-            margin-top: 0; 
-            margin-bottom: 35px; 
-            font-size: 1.1rem; 
+            margin: 0; 
+            font-size: 0.85rem; 
             text-transform: uppercase; 
-            letter-spacing: 4px; 
-            text-align: center; 
-            color: var(--text);
-            font-weight: 700;
+            letter-spacing: 3px; 
+            text-align: right; 
+            color: var(--text-dim);
+            font-weight: 600;
         }
 
         h2 span {
             color: var(--accent);
-            text-shadow: 0 0 20px var(--accent-glow);
+            text-shadow: 0 0 15px var(--accent-glow);
         }
 
         .group { 
-            margin-bottom: 22px; 
+            margin-bottom: 24px; 
             position: relative;
         }
 
@@ -90,7 +118,7 @@
             text-transform: uppercase; 
             letter-spacing: 2px; 
             font-weight: 600;
-            transition: color 0.2s;
+            transition: color 0.3s;
         }
 
         .group:focus-within label {
@@ -99,14 +127,14 @@
 
         input { 
             width: 100%; 
-            padding: 14px 16px; 
-            background: rgba(0, 0, 0, 0.4); 
+            padding: 15px 18px; 
+            background: rgba(0, 0, 0, 0.5); 
             border: 1px solid var(--border); 
             color: var(--text); 
             box-sizing: border-box; 
             font-family: inherit;
             font-size: 0.95rem;
-            border-radius: 10px; 
+            border-radius: 12px; 
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -117,26 +145,26 @@
         input:focus { 
             outline: none; 
             border-color: var(--border-focus); 
-            background: rgba(0, 0, 0, 0.6);
-            box-shadow: 0 0 0 4px var(--accent-glow), 0 0 20px rgba(59, 130, 246, 0.15); 
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 0 4px var(--accent-glow), 0 0 25px rgba(59, 130, 246, 0.2); 
         }
 
         button { 
             width: 100%; 
-            padding: 14px; 
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); 
+            padding: 16px; 
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); 
             border: none; 
             color: white; 
-            font-weight: 600; 
+            font-weight: 700; 
             cursor: pointer; 
             text-transform: uppercase; 
             font-family: inherit;
             font-size: 0.85rem;
-            border-radius: 10px; 
-            letter-spacing: 2px; 
-            margin-top: 12px; 
+            border-radius: 12px; 
+            letter-spacing: 2.5px; 
+            margin-top: 10px; 
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 20px var(--accent-glow);
+            box-shadow: 0 4px 25px var(--accent-glow);
             position: relative;
             overflow: hidden;
         }
@@ -145,8 +173,8 @@
             content: '';
             position: absolute;
             top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: 0.5s;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.6s;
         }
 
         button:hover::after {
@@ -155,7 +183,7 @@
 
         button:hover { 
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.5); 
+            box-shadow: 0 8px 35px rgba(59, 130, 246, 0.6); 
         }
 
         button:active {
@@ -192,30 +220,37 @@
         }
 
         .flag { 
-            background: rgba(0, 0, 0, 0.5); 
-            border: 1px dashed rgba(59, 130, 246, 0.4); 
-            padding: 18px; 
+            background: rgba(0, 0, 0, 0.6); 
+            border: 1px dashed rgba(59, 130, 246, 0.5); 
+            padding: 20px; 
             margin-top: 25px; 
             word-break: break-all; 
             color: var(--accent); 
             font-size: 0.9rem; 
-            border-radius: 10px; 
+            border-radius: 12px; 
             font-family: monospace;
-            box-shadow: inset 0 0 15px rgba(59, 130, 246, 0.1);
+            box-shadow: inset 0 0 20px rgba(59, 130, 246, 0.15);
         }
     </style>
 </head>
 <body>
     <div class="box">
-        <h2>System <span>Gateway</span></h2>
+        <div class="terminal-header">
+            <div class="dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            <h2>Hacker <span>Admin Panel</span></h2>
+        </div>
         <div id="f">
             <div class="group">
                 <label>User</label>
-                <input type="text" id="u" autocomplete="off" placeholder="root_admin">
+                <input type="text" id="u" autocomplete="off" placeholder="">
             </div>
             <div class="group">
                 <label>Password</label>
-                <input type="password" id="p" placeholder="••••••••••••">
+                <input type="password" id="p" placeholder="">
             </div>
             <div class="trap">
                 <label>URL</label>
@@ -225,7 +260,7 @@
             <div class="err" id="e"></div>
         </div>
         <div class="dash" id="d">
-            <h2 style="color: var(--succ); margin-bottom: 12px; text-shadow: 0 0 20px rgba(34,197,94,0.4);">Access Granted</h2>
+            <h2 style="color: var(--succ); margin-bottom: 12px; text-shadow: 0 0 20px rgba(34,197,94,0.4); font-size: 1.1rem; text-align: center;">Access Granted</h2>
             <p style="font-size: 0.85rem; color: var(--text-dim); margin-top: 0; letter-spacing: 0.5px;">Root-Sitzung erfolgreich initialisiert.</p>
             <div class="flag" id="fl"></div>
         </div>
@@ -266,7 +301,7 @@
                 document.getElementById('d').style.display = 'block';
             } else {
                 _0xee.innerText = "";
-                void _0xee.offsetWidth; // Trigger reflow to restart shake animation
+                void _0xee.offsetWidth; 
                 _0xee.innerText = "Zugriff verweigert.";
             }
         }
