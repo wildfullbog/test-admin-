@@ -7,18 +7,18 @@
     <style>
         :root { --bg: #09090b; --panel: #121217; --border: #27272a; --accent: #3b82f6; --text: #f4f4f5; --err: #ef4444; --succ: #22c55e; }
         body { font-family: monospace; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { background: var(--panel); border: 1px solid var(--border); padding: 30px; border-radius: 4px; width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-        h2 { margin-top: 0; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px; text-align: center; color: var(--accent); }
-        .group { margin-bottom: 15px; }
-        label { display: block; font-size: 0.75rem; color: #a1a1aa; margin-bottom: 5px; text-transform: uppercase; }
-        input { width: 100%; padding: 8px; background: var(--bg); border: 1px solid var(--border); color: var(--text); box-sizing: border-box; font-family: monospace; }
-        input:focus { outline: none; border-color: var(--accent); }
-        button { width: 100%; padding: 10px; background: var(--accent); border: none; color: white; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: monospace; }
+        .box { background: var(--panel); border: 1px solid var(--border); padding: 35px; border-radius: 6px; width: 340px; box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
+        h2 { margin-top: 0; margin-bottom: 25px; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px; text-align: center; color: var(--accent); }
+        .group { margin-bottom: 20px; }
+        label { display: block; font-size: 0.75rem; color: #a1a1aa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        input { width: 100%; padding: 10px; background: var(--bg); border: 1px solid var(--border); color: var(--text); box-sizing: border-box; font-family: monospace; border-radius: 4px; }
+        input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 5px rgba(59,130,246,0.3); }
+        button { width: 100%; padding: 12px; background: var(--accent); border: none; color: white; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: monospace; border-radius: 4px; letter-spacing: 1px; margin-top: 5px; }
         button:hover { background: #2563eb; }
-        .err { color: var(--err); font-size: 0.75rem; margin-top: 10px; text-align: center; height: 15px; }
+        .err { color: var(--err); font-size: 0.75rem; margin-top: 12px; text-align: center; height: 15px; }
         .trap { display: none; }
         .dash { display: none; text-align: center; }
-        .flag { background: #18181b; border: 1px dashed var(--accent); padding: 10px; margin-top: 15px; word-break: break-all; color: var(--accent); font-size: 0.85rem; }
+        .flag { background: #18181b; border: 1px dashed var(--accent); padding: 15px; margin-top: 15px; word-break: break-all; color: var(--accent); font-size: 0.85rem; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -26,11 +26,11 @@
         <h2>System Gateway</h2>
         <div id="f">
             <div class="group">
-                <label>Node_ID</label>
+                <label>User</label>
                 <input type="text" id="u" autocomplete="off">
             </div>
             <div class="group">
-                <label>Access_Key</label>
+                <label>Password</label>
                 <input type="password" id="p">
             </div>
             <div class="trap">
@@ -56,7 +56,6 @@
             }
         };
 
-        // Vollständige Byte-Codes für: Passwort
         const targetBytes = [82, 33, 102, 116, 95, 65, 100, 109, 33, 110, 95, 57, 57, 56, 50, 35, 83, 101, 99, 117, 114, 51, 95, 67, 111, 114, 101, 95, 50, 48, 50, 54, 33];
 
         function checkPass(input) {
