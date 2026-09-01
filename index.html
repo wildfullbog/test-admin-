@@ -47,31 +47,37 @@
         </div>
     </div>
     <script>
-        const _0x4f2a=["\x61\x63\x63\x65\x73\x73","\x67\x72\x61\x6e\x74\x65\x64","\x62\x6f\x64\x79","\x72\x6f\x6f\x74\x5f\x61\x64\x6d\x69\x6e"];
-        window.onload=function(){const _0x1a=new URLSearchParams(window.location.search);if(_0x1a.get(_0x4f2a[0])!==_0x4f2a[1]){document[_0x4f2a[2]].innerHTML="<h1 style='text-align:center;margin-top:20vh;font-family:sans-serif;'>404 Not Found</h1>";}};
+        const _0x4f2a = ["\x61\x63\x63\x65\x73\x73", "\x67\x72\x61\x6e\x74\x65\x64", "\x62\x6f\x64\x79", "\x72\x6f\x6f\x74\x5f\x61\x64\x6d\x69\x6e"];
         
-        async function sha256(msg) {
-            const buf = new TextEncoder().encode(msg);
-            const hash = await crypto.subtle.digest('SHA-256', buf);
-            return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
-        }
+        window.onload = function() {
+            const _0x1a = new URLSearchParams(window.location.search);
+            if (_0x1a.get(_0x4f2a[0]) !== _0x4f2a[1]) {
+                document[_0x4f2a[2]].innerHTML = "<h1 style='text-align:center;margin-top:20vh;font-family:sans-serif;'>404 Not Found</h1>";
+            }
+        };
 
-        // Korrigierter SHA-256 Hash für "RiftAdmin#2026"
-        const _0x7c = "c89694e5e41849a0e69d72492d093467664e5aa9b23b183f3e67c82eb9a2720d";
+        // Das Passwort ist hier in Chunks zerlegt, damit es im Klartext nicht sofort ins Auge springt
+        const _p1 = "Rift";
+        const _p2 = "Admin";
+        const _p3 = "#2026";
 
-        async function x0(){
-            if(document.getElementById('t').value!==""){document.getElementById('e').innerText="Protocol Violation";return;}
-            const _0x91=document.getElementById('u').value;
-            const _0x92=document.getElementById('p').value;
-            const _0xee=document.getElementById('e');
+        function x0() {
+            if (document.getElementById('t').value !== "") {
+                document.getElementById('e').innerText = "Protocol Violation";
+                return;
+            }
+            
+            const _0x91 = document.getElementById('u').value;
+            const _0x92 = document.getElementById('p').value;
+            const _0xee = document.getElementById('e');
+            
+            const realPass = _p1 + _p2 + _p3;
 
-            const hashedInput = await sha256(_0x92);
-
-            if(_0x91===_0x4f2a[3]&&hashedInput===_0x7c){
-                document.getElementById('f').style.display='none';
-                document.getElementById('fl').innerText="FLAG{c0de_obfusc4ti0n_m4st3r_9981}";
-                document.getElementById('d').style.display='block';
-            }else{
+            if (_0x91 === _0x4f2a[3] && _0x92 === realPass) {
+                document.getElementById('f').style.display = 'none';
+                document.getElementById('fl').innerText = "FLAG{c0de_obfusc4ti0n_m4st3r_9981}";
+                document.getElementById('d').style.display = 'block';
+            } else {
                 _0xee.innerText = "Zugriff verweigert.";
             }
         }
