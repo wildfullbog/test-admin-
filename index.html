@@ -5,33 +5,170 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kernel // Diagnostic Core v9.4</title>
     <style>
-        :root { --bg: #09090b; --panel: #121217; --border: #27272a; --accent: #3b82f6; --text: #f4f4f5; --err: #ef4444; --succ: #22c55e; }
-        body { font-family: monospace; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { background: var(--panel); border: 1px solid var(--border); padding: 35px; border-radius: 6px; width: 340px; box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
-        h2 { margin-top: 0; margin-bottom: 25px; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px; text-align: center; color: var(--accent); }
-        .group { margin-bottom: 20px; }
-        label { display: block; font-size: 0.75rem; color: #a1a1aa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
-        input { width: 100%; padding: 10px; background: var(--bg); border: 1px solid var(--border); color: var(--text); box-sizing: border-box; font-family: monospace; border-radius: 4px; }
-        input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 5px rgba(59,130,246,0.3); }
-        button { width: 100%; padding: 12px; background: var(--accent); border: none; color: white; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: monospace; border-radius: 4px; letter-spacing: 1px; margin-top: 5px; }
-        button:hover { background: #2563eb; }
-        .err { color: var(--err); font-size: 0.75rem; margin-top: 12px; text-align: center; height: 15px; }
+        :root { 
+            --bg: #050507; 
+            --panel: rgba(18, 18, 24, 0.75); 
+            --border: rgba(255, 255, 255, 0.08); 
+            --border-focus: #3b82f6; 
+            --accent: #3b82f6; 
+            --accent-glow: rgba(59, 130, 246, 0.25);
+            --text: #f4f4f5; 
+            --text-dim: #71717a;
+            --err: #ef4444; 
+            --succ: #22c55e; 
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, monospace; 
+            background: var(--bg); 
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.1), transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(15, 23, 42, 0.4), transparent 50%);
+            color: var(--text); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            overflow: hidden;
+        }
+
+        .box { 
+            background: var(--panel); 
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border); 
+            padding: 40px 35px; 
+            border-radius: 12px; 
+            width: 360px; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); 
+            transition: all 0.3s ease;
+        }
+
+        h2 { 
+            margin-top: 0; 
+            margin-bottom: 30px; 
+            font-size: 1rem; 
+            text-transform: uppercase; 
+            letter-spacing: 3px; 
+            text-align: center; 
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        h2 span {
+            color: var(--accent);
+        }
+
+        .group { 
+            margin-bottom: 20px; 
+            position: relative;
+        }
+
+        label { 
+            display: block; 
+            font-size: 0.7rem; 
+            color: var(--text-dim); 
+            margin-bottom: 8px; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            font-weight: 600;
+        }
+
+        input { 
+            width: 100%; 
+            padding: 12px 14px; 
+            background: rgba(0, 0, 0, 0.3); 
+            border: 1px solid var(--border); 
+            color: var(--text); 
+            box-sizing: border-box; 
+            font-family: inherit;
+            font-size: 0.9rem;
+            border-radius: 8px; 
+            transition: all 0.2s ease;
+        }
+
+        input:focus { 
+            outline: none; 
+            border-color: var(--border-focus); 
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 0 4px var(--accent-glow); 
+        }
+
+        button { 
+            width: 100%; 
+            padding: 12px; 
+            background: var(--accent); 
+            border: none; 
+            color: white; 
+            font-weight: 600; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            font-family: inherit;
+            font-size: 0.8rem;
+            border-radius: 8px; 
+            letter-spacing: 1.5px; 
+            margin-top: 10px; 
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px var(--accent-glow);
+        }
+
+        button:hover { 
+            background: #2563eb; 
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .err { 
+            color: var(--err); 
+            font-size: 0.75rem; 
+            margin-top: 15px; 
+            text-align: center; 
+            height: 15px; 
+            font-weight: 500;
+        }
+
         .trap { display: none; }
-        .dash { display: none; text-align: center; }
-        .flag { background: #18181b; border: 1px dashed var(--accent); padding: 15px; margin-top: 15px; word-break: break-all; color: var(--accent); font-size: 0.85rem; border-radius: 4px; }
+        
+        .dash { 
+            display: none; 
+            text-align: center; 
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .flag { 
+            background: rgba(0, 0, 0, 0.4); 
+            border: 1px dashed rgba(59, 130, 246, 0.4); 
+            padding: 16px; 
+            margin-top: 20px; 
+            word-break: break-all; 
+            color: var(--accent); 
+            font-size: 0.85rem; 
+            border-radius: 8px; 
+            font-family: monospace;
+        }
     </style>
 </head>
 <body>
     <div class="box">
-        <h2>System Gateway</h2>
+        <h2>System <span>Gateway</span></h2>
         <div id="f">
             <div class="group">
                 <label>User</label>
-                <input type="text" id="u" autocomplete="off">
+                <input type="text" id="u" autocomplete="off" placeholder="Username eingeben...">
             </div>
             <div class="group">
                 <label>Password</label>
-                <input type="password" id="p">
+                <input type="password" id="p" placeholder="••••••••••••">
             </div>
             <div class="trap">
                 <label>URL</label>
@@ -41,8 +178,8 @@
             <div class="err" id="e"></div>
         </div>
         <div class="dash" id="d">
-            <h2 style="color: var(--succ);">Access Granted</h2>
-            <p style="font-size: 0.8rem;">Root-Sitzung erfolgreich initialisiert.</p>
+            <h2 style="color: var(--succ); margin-bottom: 10px;">Access Granted</h2>
+            <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0;">Root-Sitzung erfolgreich initialisiert.</p>
             <div class="flag" id="fl"></div>
         </div>
     </div>
