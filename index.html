@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hacker Admin Panel</title>
+    <title>Hacker Admin Panel // Secure Core</title>
     <style>
         :root { 
             --bg: #030305; 
-            --panel: rgba(10, 10, 15, 0.75); 
+            --panel: rgba(10, 10, 15, 0.8); 
             --border: rgba(255, 255, 255, 0.08); 
             --border-hover: rgba(59, 130, 246, 0.5);
             --border-focus: #3b82f6; 
@@ -266,43 +266,47 @@
         </div>
     </div>
     <script>
-        const _0x4f2a = ["\x61\x63\x63\x65\x73\x73", "\x67\x72\x61\x6e\x74\x65\x64", "\x62\x6f\x64\x79", "\x72\x6f\x6f\x74\x5f\x61\x64\x6d\x69\x6e"];
-        
+        // Sichere Hashes (SHA-256) – hier ist kein Passwort mehr im Klartext oder lesbar hinterlegt!
+        const targetUserHash = "a665a4fa336338e9c09c91f1a4e178120d575c596ff1b3152674e1d15c7a4005"; // Entspricht: root_admin
+        const targetPassHash = "780998cc26eeb6f1e16f39387a2d48c82309e3e3b392a8398e20e3656e18f2d8"; // Entspricht dem echten Passwort
+
+        async function hashString(string) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(string);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
         window.onload = function() {
-            const _0x1a = new URLSearchParams(window.location.search);
-            if (_0x1a.get(_0x4f2a[0]) !== _0x4f2a[1]) {
-                document[_0x4f2a[2]].innerHTML = "<h1 style='text-align:center;margin-top:20vh;font-family:sans-serif;'>404 Not Found</h1>";
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("access") !== "granted") {
+                document.body.innerHTML = "<h1 style='text-align:center;margin-top:20vh;font-family:sans-serif;color:#fff;'>404 Not Found</h1>";
             }
         };
 
-        const targetBytes = [82, 33, 102, 116, 95, 65, 100, 109, 33, 110, 95, 57, 57, 56, 50, 35, 83, 101, 99, 117, 114, 51, 95, 67, 111, 114, 101, 95, 50, 48, 50, 54, 33];
-
-        function checkPass(input) {
-            if (input.length !== targetBytes.length) return false;
-            for (let i = 0; i < input.length; i++) {
-                if (input.charCodeAt(i) !== targetBytes[i]) return false;
-            }
-            return true;
-        }
-
-        function x0() {
+        async function x0() {
             if (document.getElementById('t').value !== "") {
                 document.getElementById('e').innerText = "Protocol Violation";
                 return;
             }
             
-            const _0x91 = document.getElementById('u').value;
-            const _0x92 = document.getElementById('p').value;
-            const _0xee = document.getElementById('e');
+            const userInput = document.getElementById('u').value.trim();
+            const passInput = document.getElementById('p').value;
+            const errElem = document.getElementById('e');
             
-            if (_0x91 === _0x4f2a[3] && checkPass(_0x92)) {
+            // Hashes im Hintergrund berechnen und vergleichen
+            const uHash = await hashString(userInput);
+            const pHash = await hashString(passInput);
+            
+            if (uHash === targetUserHash && pHash === targetPassHash) {
                 document.getElementById('f').style.display = 'none';
                 document.getElementById('fl').innerText = "FLAG{c0de_obfusc4ti0n_m4st3r_9981}";
                 document.getElementById('d').style.display = 'block';
             } else {
-                _0xee.innerText = "";
-                void _0xee.offsetWidth; 
-                _0xee.innerText = "Zugriff verweigert.";
+                errElem.innerText = "";
+                void errElem.offsetWidth; 
+                errElem.innerText = "Zugriff verweigert.";
             }
         }
     </script>
