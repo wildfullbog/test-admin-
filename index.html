@@ -56,10 +56,11 @@
             }
         };
 
-        // Das Passwort ist hier in Chunks zerlegt, damit es im Klartext nicht sofort ins Auge springt
-        const _p1 = "Rift";
-        const _p2 = "Admin";
-        const _p3 = "#2026";
+        // Das komplexe Passwort aufgeteilt im Code
+        const _p1 = "R!ft_Adm";
+        const _p2 = "!n_9982#S";
+        const _p3 = "ecur3_Co";
+        const _p4 = "re_2026!";
 
         function x0() {
             if (document.getElementById('t').value !== "") {
@@ -71,7 +72,7 @@
             const _0x92 = document.getElementById('p').value;
             const _0xee = document.getElementById('e');
             
-            const realPass = _p1 + _p2 + _p3;
+            const realPass = _p1 + _p2 + _p3 + _p4;
 
             if (_0x91 === _0x4f2a[3] && _0x92 === realPass) {
                 document.getElementById('f').style.display = 'none';
