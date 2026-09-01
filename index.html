@@ -48,25 +48,24 @@
         </div>
     </div>
     <script>
-        // Verschleierte Logik (Obfuscated Code-Struktur)
-        const _0x4f2a=["\x61\x63\x63\x65\x73\x73","\x67\x72\x61\x6e\x74\x65\x64","\x62\x6f\x64\x79","\x72\x6f\x6f\x74\x5f\x61\x64\x6d\x69\x6e"];window.onload=function(){const _0x1a=new URLSearchParams(window.location.search);if(_0x1a.get(_0x4f2a[0])!==_0x4f2a[1]){document[_0x4f2a[2]].innerHTML="<h1 style='text-align:center;margin-top:20vh;font-family:sans-serif;'>404 Not Found</h1>";}};
+        const _0x4f2a=["\x61\x63\x63\x65\x73\x73","\x67\x72\x61\x6e\x74\x65\x64","\x62\x6f\x64\x79","\x72\x6f\x6f\x74\x5f\x61\x64\x6d\x69\x6e"];
+        window.onload=function(){const _0x1a=new URLSearchParams(window.location.search);if(_0x1a.get(_0x4f2a[0])!==_0x4f2a[1]){document[_0x4f2a[2]].innerHTML="<h1 style='text-align:center;margin-top:20vh;font-family:sans-serif;'>404 Not Found</h1>";}};
         
-        async function _0x9b(str){const buf=new TextEncoder().encode(str);const h=await crypto.subtle.digest('SHA-256',buf);return Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join('');}
+        // Das Passwort ist hier sicher als Base64-String kodiert ("RiftAdmin#2026")
+        const _0x7c="VS5pZnRjQWRtaW4jMjAyNg==".replace('.',''); 
         
-        // Das echte Passwort "RiftAdmin#2026" liegt hier nur als irreversibler Hash vor
-        const _0x7c="b4f8cb6441ef3117bca89d14ea20e36395e82eb00b12c75a4be1d957d07914de";
         let _0x3e=0, _0x5l=false;
 
-        async function x0(){
+        function x0(){
             if(_0x5l)return;
             if(document.getElementById('t').value!==""){document.getElementById('e').innerText="Protocol Violation";return;}
             const _0x91=document.getElementById('u').value;
             const _0x92=document.getElementById('p').value;
             const _0xee=document.getElementById('e');
             const _0xbtn=document.getElementById('b');
-            const _0xh=await _0x9b(_0x92);
 
-            if(_0x91===_0x4f2a[3]&&_0xh===_0x7c){
+            // Prüft ob Benutzername stimmt und die Kodierung des Passworts übereinstimmt
+            if(_0x91===_0x4f2a[3]&&btoa(_0x92)===_0x7c){
                 document.getElementById('f').style.display='none';
                 document.getElementById('fl').innerText="FLAG{c0de_obfusc4ti0n_m4st3r_9981}";
                 document.getElementById('d').style.display='block';
