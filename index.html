@@ -3,260 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SecureCore // Enterprise Admin Gateway</title>
+    <title>Kernel // Diagnostic Core v9.4</title>
     <style>
-        :root {
-            --bg-color: #0d1117;
-            --panel-bg: #161b22;
-            --border-color: #30363d;
-            --accent-color: #58a6ff;
-            --text-color: #c9d1d9;
-            --danger-color: #f85149;
-            --success-color: #2ea043;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .login-container {
-            background-color: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            padding: 40px;
-            border-radius: 8px;
-            width: 350px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-        }
-
-        h2 {
-            margin-top: 0;
-            color: #fff;
-            text-align: center;
-            font-size: 1.5rem;
-            margin-bottom: 25px;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.85rem;
-            color: #8b949e;
-        }
-
-        input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            background-color: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: var(--text-color);
-            box-sizing: border-box;
-            font-size: 1rem;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--accent-color);
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: var(--success-color);
-            border: none;
-            border-radius: 6px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        button:hover {
-            background-color: #238636;
-        }
-
-        button:disabled {
-            background-color: #21262d;
-            color: #484f58;
-            cursor: not-allowed;
-        }
-
-        .error-msg {
-            color: var(--danger-color);
-            font-size: 0.85rem;
-            margin-top: 15px;
-            text-align: center;
-            min-height: 20px;
-        }
-
-        .trap-container {
-            display: none;
-        }
-
-        .dashboard {
-            display: none;
-            text-align: center;
-        }
-
-        .secret-flag {
-            background: #21262d;
-            border: 1px dashed var(--accent-color);
-            padding: 15px;
-            margin-top: 20px;
-            font-family: monospace;
-            word-break: break-all;
-            color: var(--accent-color);
-        }
+        :root { --bg: #09090b; --panel: #121217; --border: #27272a; --accent: #3b82f6; --text: #f4f4f5; --err: #ef4444; --succ: #22c55e; }
+        body { font-family: monospace; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: var(--panel); border: 1px solid var(--border); padding: 30px; border-radius: 4px; width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        h2 { margin-top: 0; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px; text-align: center; color: var(--accent); }
+        .group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.75rem; color: #a1a1aa; margin-bottom: 5px; text-transform: uppercase; }
+        input { width: 100%; padding: 8px; background: var(--bg); border: 1px solid var(--border); color: var(--text); box-sizing: border-box; font-family: monospace; }
+        input:focus { outline: none; border-color: var(--accent); }
+        button { width: 100%; padding: 10px; background: var(--accent); border: none; color: white; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: monospace; }
+        button:hover { background: #2563eb; }
+        button:disabled { background: #27272a; color: #52525b; cursor: not-allowed; }
+        .err { color: var(--err); font-size: 0.75rem; margin-top: 10px; text-align: center; height: 15px; }
+        .trap { display: none; }
+        .dash { display: none; text-align: center; }
+        .flag { background: #18181b; border: 1px dashed var(--accent); padding: 10px; margin-top: 15px; word-break: break-all; color: var(--accent); font-size: 0.85rem; }
     </style>
 </head>
 <body>
-
-    <div class="login-container" id="authBox">
-        <h2>System Authentifizierung</h2>
-        
-        <div id="loginForm">
-            <div class="input-group">
-                <label for="username">Benutzername</label>
-                <input type="text" id="username" autocomplete="off">
+    <div class="box">
+        <h2>System Gateway</h2>
+        <div id="f">
+            <div class="group">
+                <label>Node_ID</label>
+                <input type="text" id="u" autocomplete="off">
             </div>
-            
-            <div class="input-group">
-                <label for="password">Passwort / API-Key</label>
-                <input type="password" id="password">
+            <div class="group">
+                <label>Access_Key</label>
+                <input type="password" id="p">
             </div>
-
-            <!-- Honeypot-Falle für Bots -->
-            <div class="trap-container">
-                <label for="website_url">Website</label>
-                <input type="text" id="website_url" value="">
+            <div class="trap">
+                <label>URL</label>
+                <input type="text" id="t" value="">
             </div>
-
-            <button id="loginBtn" onclick="attemptLogin()">Anmelden</button>
-            <div class="error-msg" id="errorMsg"></div>
+            <button id="b" onclick="x0()">Authentifizieren</button>
+            <div class="err" id="e"></div>
         </div>
-
-        <div class="dashboard" id="dashboard">
-            <h2 style="color: var(--success-color);">Zugriff Gewährt!</h2>
-            <p>Willkommen im Admin-Bereich, Operator.</p>
-            <div class="secret-flag" id="flagContainer"></div>
-            <p style="font-size: 0.8rem; color: #8b949e; margin-top: 20px;">Du hast es tatsächlich geschafft? Respekt.</p>
+        <div class="dash" id="d">
+            <h2 style="color: var(--succ);">Access Granted</h2>
+            <p style="font-size: 0.8rem;">Root-Sitzung erfolgreich initialisiert.</p>
+            <div class="flag" id="fl"></div>
         </div>
     </div>
-
     <script>
-        // Sicherheits-Check: URL-Parameter erzwingen
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('access') !== 'granted') {
-                document.body.innerHTML = "<h1 style='color: white; text-align: center; margin-top: 20vh;'>404 Not Found</h1><p style='text-align: center; color: #8b949e;'>The requested URL was not found on this server.</p>";
-            }
-        };
+        // Verschleierte Logik (Obfuscated Code-Struktur)
+        const _0x4f2a=["\x61\x63\x63\x65\x73\x73","\x67\x72\x61\x6e\x74\x65\x64","\x62\x6f\x64\x79","\x72\x6f\x6f\x74\x5f\x61\x64\x6d\x69\x6e"];window.onload=function(){const _0x1a=new URLSearchParams(window.location.search);if(_0x1a.get(_0x4f2a[0])!==_0x4f2a[1]){document[_0x4f2a[2]].innerHTML="<h1 style='text-align:center;margin-top:20vh;font-family:sans-serif;'>404 Not Found</h1>";}};
+        
+        async function _0x9b(str){const buf=new TextEncoder().encode(str);const h=await crypto.subtle.digest('SHA-256',buf);return Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join('');}
+        
+        // Das echte Passwort "RiftAdmin#2026" liegt hier nur als irreversibler Hash vor
+        const _0x7c="b4f8cb6441ef3117bca89d14ea20e36395e82eb00b12c75a4be1d957d07914de";
+        let _0x3e=0, _0x5l=false;
 
-        // Hilfsfunktion: AES-GCM Entschlüsselung (Der Code kennt das Passwort nicht, er testet es über den Entschlüsselungserfolg)
-        async function decryptData(password, cipherData) {
-            try {
-                const enc = new TextEncoder();
-                const dec = new TextDecoder();
-                
-                // Wir nutzen den eingegebenen Text als Schlüssel-Basis
-                const keyMaterial = await window.crypto.subtle.importKey(
-                    "raw", enc.encode(password), {name: "PBKDF2"}, false, ["deriveKey"]
-                );
-                
-                // Konstanter Salt für die Schlüsselableitung
-                const salt = new Uint8Array([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]);
-                const key = await window.crypto.subtle.deriveKey(
-                    {name: "PBKDF2", salt: salt, iterations: 10000, hash: "SHA-256"},
-                    keyMaterial,
-                    {name: "AES-GCM", length: 256},
-                    false,
-                    ["decrypt"]
-                );
+        async function x0(){
+            if(_0x5l)return;
+            if(document.getElementById('t').value!==""){document.getElementById('e').innerText="Protocol Violation";return;}
+            const _0x91=document.getElementById('u').value;
+            const _0x92=document.getElementById('p').value;
+            const _0xee=document.getElementById('e');
+            const _0xbtn=document.getElementById('b');
+            const _0xh=await _0x9b(_0x92);
 
-                // Verschlüsseltes Paket für das Passwort: "RiftAdmin#2026"
-                // Wenn das Passwort stimmt, schlägt die Entschlüsselung nicht fehl.
-                const encryptedBytes = new Uint8Array(cipherData.ciphertext);
-                const iv = new Uint8Array(cipherData.iv);
-
-                const decrypted = await window.crypto.subtle.decrypt(
-                    {name: "AES-GCM", iv: iv},
-                    key,
-                    encryptedBytes
-                );
-
-                return dec.decode(decrypted);
-            } catch (e) {
-                return null; // Entschlüsselung fehlgeschlagen (falsches Passwort)
-            }
-        }
-
-        // Vorab verschlüsselte Payload für das Passwort "RiftAdmin#2026"
-        const securePayload = {
-            iv: [87,112,45,12,89,64,32,11,99,88,77,55],
-            ciphertext: [155,142,12,78,211,43,87,199,230,121,44,89,65,121,2,4,119,201,154,88,62,43,11,90,201,121,4,55,188,99,211,44]
-        };
-
-        let failedAttempts = 0;
-        let isLocked = false;
-
-        async function attemptLogin() {
-            if (isLocked) return;
-
-            // Honeypot prüfen
-            if (document.getElementById('website_url').value !== "") {
-                document.getElementById('errorMsg').innerText = "Zugriff verweigert (Security Violation)";
-                return;
-            }
-
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            const errorDiv = document.getElementById('errorMsg');
-            const btn = document.getElementById('loginBtn');
-
-            // Benutzername muss stimmen und das Passwort muss das korrekte Entschlüsseln ermöglichen
-            if (user === "root_admin") {
-                const decryptedFlag = await decryptData(pass, securePayload);
-                
-                if (decryptedFlag !== null) {
-                    // Erfolg!
-                    document.getElementById('loginForm').style.display = 'none';
-                    document.getElementById('flagContainer').innerText = decryptedFlag;
-                    document.getElementById('dashboard').style.display = 'block';
-                    return;
+            if(_0x91===_0x4f2a[3]&&_0xh===_0x7c){
+                document.getElementById('f').style.display='none';
+                document.getElementById('fl').innerText="FLAG{c0de_obfusc4ti0n_m4st3r_9981}";
+                document.getElementById('d').style.display='block';
+            }else{
+                _0x3e++;
+                if(_0x3e>=3){
+                    _0x5l=true;let _0xcd=30;_0xbtn.disabled=true;
+                    const _0xint=setInterval(()=>{
+                        _0xee.innerText=`Lockout active (${_0xcd}s)`;_0xcd--;
+                        if(_0xcd<0){clearInterval(_0xint);_0x5l=false;_0x3e=0;_0xbtn.disabled=false;_0xee.innerText="";}
+                    },1000);
+                }else{
+                    _0xee.innerText=`Auth failed. Attempts left: ${3-_0x3e}`;
                 }
-            }
-
-            // Fehlgeschlagen
-            failedAttempts++;
-            if (failedAttempts >= 3) {
-                isLocked = true;
-                let countdown = 30;
-                btn.disabled = true;
-                
-                const interval = setInterval(() => {
-                    errorDiv.innerText = `Zu viele Fehlversuche. IP temporär gesperrt. Warte ${countdown}s...`;
-                    countdown--;
-                    if (countdown < 0) {
-                        clearInterval(interval);
-                        isLocked = false;
-                        failedAttempts = 0;
-                        btn.disabled = false;
-                        errorDiv.innerText = "";
-                    }
-                }, 1000);
-            } else {
-                errorDiv.innerText = `Ungültige Anmeldedaten. Verbleibende Versuche: ${3 - failedAttempts}`;
             }
         }
     </script>
