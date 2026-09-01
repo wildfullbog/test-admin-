@@ -256,7 +256,7 @@
                 <label>URL</label>
                 <input type="text" id="t" value="">
             </div>
-            <button id="b" onclick="x0()">Authentifizieren</button>
+            <button id="b" onclick="_0x9a8f()">Authentifizieren</button>
             <div class="err" id="e"></div>
         </div>
         <div class="dash" id="d">
@@ -266,47 +266,44 @@
         </div>
     </div>
     <script>
-        // Sichere Hashes (SHA-256) – hier ist kein Passwort mehr im Klartext oder lesbar hinterlegt!
-        const targetUserHash = "a665a4fa336338e9c09c91f1a4e178120d575c596ff1b3152674e1d15c7a4005"; // Entspricht: root_admin
-        const targetPassHash = "780998cc26eeb6f1e16f39387a2d48c82309e3e3b392a8398e20e3656e18f2d8"; // Entspricht dem echten Passwort
+        const _0x1c = ["61", "66", "66", "35", "61", "34", "66", "61", "33", "36", "33", "38", "65", "39", "63", "30", "39", "63", "39", "31", "66", "31", "61", "34", "65", "31", "37", "38", "31", "32", "30", "64", "35", "37", "35", "63", "35", "39", "36", "66", "66", "31", "62", "33", "31", "35", "32", "36", "37", "34", "65", "31", "64", "31", "35", "63", "37", "61", "34", "30", "30", "35"];
+        const _0x2d = ["37", "38", "30", "39", "39", "38", "63", "63", "32", "36", "65", "65", "62", "36", "66", "31", "65", "31", "36", "66", "33", "39", "33", "38", "37", "61", "32", "64", "34", "38", "63", "38", "32", "33", "30", "39", "65", "33", "65", "33", "62", "33", "39", "32", "61", "38", "33", "39", "38", "65", "32", "30", "65", "33", "36", "35", "36", "65", "31", "38", "66", "32", "64", "38"];
 
-        async function hashString(string) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(string);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        function _0x3e(arr) { return arr.join(''); }
+
+        async function _0x4f(str) {
+            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
         window.onload = function() {
-            const params = new URLSearchParams(window.location.search);
-            if (params.get("access") !== "granted") {
+            const p = new URLSearchParams(window.location.search);
+            if (p.get("access") !== "granted") {
                 document.body.innerHTML = "<h1 style='text-align:center;margin-top:20vh;font-family:sans-serif;color:#fff;'>404 Not Found</h1>";
             }
         };
 
-        async function x0() {
+        async function _0x9a8f() {
             if (document.getElementById('t').value !== "") {
                 document.getElementById('e').innerText = "Protocol Violation";
                 return;
             }
             
-            const userInput = document.getElementById('u').value.trim();
-            const passInput = document.getElementById('p').value;
-            const errElem = document.getElementById('e');
+            const uVal = document.getElementById('u').value.trim();
+            const pVal = document.getElementById('p').value;
+            const err = document.getElementById('e');
             
-            // Hashes im Hintergrund berechnen und vergleichen
-            const uHash = await hashString(userInput);
-            const pHash = await hashString(passInput);
+            const uH = await _0x4f(uVal);
+            const pH = await _0x4f(pVal);
             
-            if (uHash === targetUserHash && pHash === targetPassHash) {
+            if (uH === _0x3e(_0x1c) && pH === _0x3e(_0x2d)) {
                 document.getElementById('f').style.display = 'none';
                 document.getElementById('fl').innerText = "FLAG{c0de_obfusc4ti0n_m4st3r_9981}";
                 document.getElementById('d').style.display = 'block';
             } else {
-                errElem.innerText = "";
-                void errElem.offsetWidth; 
-                errElem.innerText = "Zugriff verweigert.";
+                err.innerText = "";
+                void err.offsetWidth; 
+                err.innerText = "Zugriff verweigert.";
             }
         }
     </script>
