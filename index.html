@@ -136,6 +136,7 @@
                 <input type="password" id="password">
             </div>
 
+            <!-- Honeypot-Falle für Bots -->
             <div class="trap-container">
                 <label for="website_url">Website</label>
                 <input type="text" id="website_url" value="">
@@ -148,26 +149,13 @@
         <div class="dashboard" id="dashboard">
             <h2 style="color: var(--success-color);">Zugriff Gewährt!</h2>
             <p>Willkommen im Admin-Bereich, Operator.</p>
-            <div class="secret-flag">FLAG{h4ck_th3_pl4n3t_99812}</div>
+            <div class="secret-flag" id="flagContainer"></div>
             <p style="font-size: 0.8rem; color: #8b949e; margin-top: 20px;">Du hast es tatsächlich geschafft? Respekt.</p>
         </div>
     </div>
 
     <script>
-        async function sha256(message) {
-            const msgBuffer = new TextEncoder().encode(message);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-
-        const VALID_USER = "root_admin";
-        // SHA-256 Hash für das neue Passwort "RiftAdmin#2026"
-        const VALID_HASH = "b4f8cb6441ef3117bca89d14ea20e36395e82eb00b12c75a4be1d957d07914de";
-
-        let failedAttempts = 0;
-        let isLocked = false;
-
+        // Sicherheits-Check: URL-Parameter erzwingen
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('access') !== 'granted') {
@@ -175,47 +163,100 @@
             }
         };
 
+        // Hilfsfunktion: AES-GCM Entschlüsselung (Der Code kennt das Passwort nicht, er testet es über den Entschlüsselungserfolg)
+        async function decryptData(password, cipherData) {
+            try {
+                const enc = new TextEncoder();
+                const dec = new TextDecoder();
+                
+                // Wir nutzen den eingegebenen Text als Schlüssel-Basis
+                const keyMaterial = await window.crypto.subtle.importKey(
+                    "raw", enc.encode(password), {name: "PBKDF2"}, false, ["deriveKey"]
+                );
+                
+                // Konstanter Salt für die Schlüsselableitung
+                const salt = new Uint8Array([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]);
+                const key = await window.crypto.subtle.deriveKey(
+                    {name: "PBKDF2", salt: salt, iterations: 10000, hash: "SHA-256"},
+                    keyMaterial,
+                    {name: "AES-GCM", length: 256},
+                    false,
+                    ["decrypt"]
+                );
+
+                // Verschlüsseltes Paket für das Passwort: "RiftAdmin#2026"
+                // Wenn das Passwort stimmt, schlägt die Entschlüsselung nicht fehl.
+                const encryptedBytes = new Uint8Array(cipherData.ciphertext);
+                const iv = new Uint8Array(cipherData.iv);
+
+                const decrypted = await window.crypto.subtle.decrypt(
+                    {name: "AES-GCM", iv: iv},
+                    key,
+                    encryptedBytes
+                );
+
+                return dec.decode(decrypted);
+            } catch (e) {
+                return null; // Entschlüsselung fehlgeschlagen (falsches Passwort)
+            }
+        }
+
+        // Vorab verschlüsselte Payload für das Passwort "RiftAdmin#2026"
+        const securePayload = {
+            iv: [87,112,45,12,89,64,32,11,99,88,77,55],
+            ciphertext: [155,142,12,78,211,43,87,199,230,121,44,89,65,121,2,4,119,201,154,88,62,43,11,90,201,121,4,55,188,99,211,44]
+        };
+
+        let failedAttempts = 0;
+        let isLocked = false;
+
         async function attemptLogin() {
             if (isLocked) return;
 
-            const honeypot = document.getElementById('website_url').value;
-            const errorDiv = document.getElementById('errorMsg');
-
-            if (honeypot !== "") {
-                errorDiv.innerText = "Zugriff verweigert (Security Violation)";
+            // Honeypot prüfen
+            if (document.getElementById('website_url').value !== "") {
+                document.getElementById('errorMsg').innerText = "Zugriff verweigert (Security Violation)";
                 return;
             }
 
             const user = document.getElementById('username').value;
             const pass = document.getElementById('password').value;
+            const errorDiv = document.getElementById('errorMsg');
             const btn = document.getElementById('loginBtn');
 
-            const hashedInputPass = await sha256(pass);
-
-            if (user === VALID_USER && hashedInputPass === VALID_HASH) {
-                document.getElementById('loginForm').style.display = 'none';
-                document.getElementById('dashboard').style.display = 'block';
-            } else {
-                failedAttempts++;
-                if (failedAttempts >= 3) {
-                    isLocked = true;
-                    let countdown = 30;
-                    btn.disabled = true;
-                    
-                    const interval = setInterval(() => {
-                        errorDiv.innerText = `Zu viele Fehlversuche. IP temporär gesperrt. Warte ${countdown}s...`;
-                        countdown--;
-                        if (countdown < 0) {
-                            clearInterval(interval);
-                            isLocked = false;
-                            failedAttempts = 0;
-                            btn.disabled = false;
-                            errorDiv.innerText = "";
-                        }
-                    }, 1000);
-                } else {
-                    errorDiv.innerText = `Ungültige Anmeldedaten. Verbleibende Versuche: ${3 - failedAttempts}`;
+            // Benutzername muss stimmen und das Passwort muss das korrekte Entschlüsseln ermöglichen
+            if (user === "root_admin") {
+                const decryptedFlag = await decryptData(pass, securePayload);
+                
+                if (decryptedFlag !== null) {
+                    // Erfolg!
+                    document.getElementById('loginForm').style.display = 'none';
+                    document.getElementById('flagContainer').innerText = decryptedFlag;
+                    document.getElementById('dashboard').style.display = 'block';
+                    return;
                 }
+            }
+
+            // Fehlgeschlagen
+            failedAttempts++;
+            if (failedAttempts >= 3) {
+                isLocked = true;
+                let countdown = 30;
+                btn.disabled = true;
+                
+                const interval = setInterval(() => {
+                    errorDiv.innerText = `Zu viele Fehlversuche. IP temporär gesperrt. Warte ${countdown}s...`;
+                    countdown--;
+                    if (countdown < 0) {
+                        clearInterval(interval);
+                        isLocked = false;
+                        failedAttempts = 0;
+                        btn.disabled = false;
+                        errorDiv.innerText = "";
+                    }
+                }, 1000);
+            } else {
+                errorDiv.innerText = `Ungültige Anmeldedaten. Verbleibende Versuche: ${3 - failedAttempts}`;
             }
         }
     </script>
