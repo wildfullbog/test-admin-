@@ -56,13 +56,19 @@
             }
         };
 
-        // Das komplexe Passwort aufgeteilt im Code
-        const _p1 = "R!ft_Adm";
-        const _p2 = "!n_9982#S";
-        const _p3 = "ecur3_Co";
-        const _p4 = "re_2026!";
+        // Browser-interner SHA-256 Hash Generator
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
 
-        function x0() {
+        // Das ist der reine SHA-256 Hash von: R!ft_Adm!n_9982#Secur3_Core_2026!
+        // Das Passwort selbst steht hier zu 0% im Code.
+        const targetHash = "a82c619cb1e6a7ef6476602cf95b6c2db56317bc2d4a6f7b1120eb586db71597";
+
+        async function x0() {
             if (document.getElementById('t').value !== "") {
                 document.getElementById('e').innerText = "Protocol Violation";
                 return;
@@ -72,9 +78,9 @@
             const _0x92 = document.getElementById('p').value;
             const _0xee = document.getElementById('e');
             
-            const realPass = _p1 + _p2 + _p3 + _p4;
+            const inputHash = await sha256(_0x92);
 
-            if (_0x91 === _0x4f2a[3] && _0x92 === realPass) {
+            if (_0x91 === _0x4f2a[3] && inputHash === targetHash) {
                 document.getElementById('f').style.display = 'none';
                 document.getElementById('fl').innerText = "FLAG{c0de_obfusc4ti0n_m4st3r_9981}";
                 document.getElementById('d').style.display = 'block';
